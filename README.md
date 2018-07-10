@@ -1,5 +1,5 @@
-## Field Services Manager
-Manage field services, schedule and complete jobs and more
+## Things
+Manage things
 
 
 ## 00 Scaffold
@@ -313,4 +313,60 @@ public IActionResult AddThing(Thing thing)
 
 ```
 <h4 class="text-danger">@ViewData["Message"]</h4>
+```
+
+
+
+## 08 Delete Things
+
+* Add the actions and view.
+
+`Controllers/HomeController.cs`
+
+```
+public IActionResult ConfirmDeletion(int thingId)
+{
+    return View(repo.Things.SingleOrDefault(t => t.Id == thingId));
+}
+
+public IActionResult DeleteThing(int thingId)
+{
+
+    repo.DeleteThing(thingId);
+
+    return RedirectToAction("Things");
+}
+```
+
+
+
+`Views/Home/ConfirmDeletion.cshtml`
+
+```
+@model Thing
+
+
+<h4 style="margin: 2em">Confirm the removal of thing <b>@Model.Name</b>.</h4>
+
+
+<form asp-action="DeleteThing" asp-route-thingId="@Model.Id" method="post">    
+    <button type="submit" class="btn btn-danger btn-sm">
+        Remove This Thing
+    </button>
+    <a asp-action="Things" class="btn btn-default">Cancel</a>
+</form>
+```
+
+* Edit the Things view so that the delete button submission leads to the ConfirmDeletion action.
+
+`Views/Home/Things.cshtml`
+```
+<td class="text-center">
+    <form asp-action="ConfirmDeletion" method="post">
+        <input type="hidden" name="thingId" value="@thing.Id" />
+        <button type="submit" class="btn btn-danger btn-sm">
+            Delete
+        </button>
+    </form>
+</td>
 ```

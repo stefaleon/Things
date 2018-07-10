@@ -53,9 +53,21 @@ namespace MVCCoreApp.Controllers
             return View();
         }
 
-        public IActionResult DeleteThing()
+
+        
+
+
+        public IActionResult ConfirmDeletion(int thingId)
         {
-            return View();
+            return View(repo.Things.SingleOrDefault(t => t.Id == thingId));
+        }
+
+        public IActionResult DeleteThing(int thingId)
+        {
+
+            repo.DeleteThing(thingId);
+
+            return RedirectToAction("Things");
         }
 
         public IActionResult Error()

@@ -1,0 +1,12 @@
+﻿@model Thing
+
+
+<h4 style="margin: 2em">Confirm the removal of thing <b>@Model.Name</b>.</h4>
+
+
+<form asp-action="DeleteThing" asp-route-thingId="@Model.Id" method="post">    
+    <button type="submit" class="btn btn-danger btn-sm">
+        Remove This Thing
+    </button>
+    <a asp-action="Things" class="btn btn-default">Cancel</a>
+</form>

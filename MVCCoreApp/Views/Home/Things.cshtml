@@ -15,8 +15,8 @@
     <tr>
         <td>@thing.Name</td>
         <td class="text-center">
-            <form asp-action="DeleteThing" method="post">
-                <input type="hidden" name="Id" value="@thing.Id" />
+            <form asp-action="ConfirmDeletion" method="post">
+                <input type="hidden" name="thingId" value="@thing.Id" />
                 <button type="submit" class="btn btn-danger btn-sm">
                     Delete
                 </button>
