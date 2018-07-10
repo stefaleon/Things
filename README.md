@@ -27,3 +27,25 @@ Manage field services, schedule and complete jobs and more
 * Add the Things cshtml stub in Views/Home.
 
 
+
+## 02 Models
+
+
+
+* Add the main model classes.
+
+`Models/Thing.cs`
+
+```
+namespace MVCCoreApp.Models
+{
+    public class Thing
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+    }
+}
+```
+
+
