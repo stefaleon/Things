@@ -127,3 +127,26 @@ namespace MVCCoreApp.Models
     }
 }
 ```
+
+## 04 Connect to MSSQLLocalDB
+
+
+* Configure a connection string.
+
+`appsettings.json`
+
+```
+"ConnectionStrings": {
+  "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=Things;Trusted_Connection=True;MultipleActiveResultSets=true"
+}
+```
+
+* Configure the services for the database context and the repository.
+
+`Startup.cs`
+
+```
+services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+services.AddTransient<Repository>();
+```
