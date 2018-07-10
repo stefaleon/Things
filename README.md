@@ -150,3 +150,23 @@ services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 services.AddTransient<Repository>();
 ```
+
+
+## 05 Migrate on startup
+
+* Add an initial migration.
+
+* Add code to the Configure method so that the migration is run on application start.
+
+`Startup.cs`
+
+```
+// auto create the db on app start           
+using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+{
+    var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    context.Database.Migrate();
+}
+```
+
+
