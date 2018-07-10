@@ -90,7 +90,7 @@ namespace MVCCoreApp.Models
             context = ctx;
         }
 
-        // mapping the context queryables 
+        // mapping the context queryables
         public IQueryable<Thing> Things => context.Things;
 
 
@@ -170,3 +170,147 @@ using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactor
 ```
 
 
+
+
+## 06 Things
+
+* Overload the HomeController constructor.
+
+`Controllers/HomeController.cs`
+
+```
+private Repository repo;
+
+public HomeController(Repository rRepo)
+{
+    repo = rRepo;
+}
+```
+
+* Edit the Things action.
+
+`Controllers/HomeController.cs`
+
+```
+public ViewResult Things() => View(repo.Things.OrderBy(c => c.Name));
+```
+
+* Edit the Things view.
+
+`Views/Home/Things.cshtml`
+
+```
+@model IEnumerable<Thing>
+
+
+<div class="text-center" style="padding: 10px">
+    <a asp-action="AddThing" class="btn btn-primary">Add a thing</a>
+</div>
+
+
+<table class="table table-striped table-bordered table-sm">
+    <tr>
+        <th>Name</th>        
+    </tr>
+    @foreach (var thing in Model)
+    {
+    <tr>
+        <td>@thing.Name</td>        
+        <td class="text-center">
+            <form asp-action="DeleteThing" method="post">
+                <input type="hidden" name="Id" value="@thing.Id" />
+                <button type="submit" class="btn btn-danger btn-sm">
+                    Delete
+                </button>
+            </form>
+        </td>
+    </tr>
+    }
+</table>
+```
+
+
+* Create the stubs for the AddThing and DeleteThing methods.
+
+`Controllers/HomeController.cs`
+
+```
+public IActionResult AddThing()
+{
+    return View();
+}
+```
+
+```
+ public IActionResult DeleteThing()
+{
+    return View();
+}
+```
+
+
+* Create the stubs for the AddThing and DeleteThing views.
+
+
+
+## 07 Add Things
+
+* Create a view that holds the post form.
+
+`Views/Home/AddThing.cshtml`
+
+```
+@model Thing
+
+<h4>Thing's Data</h4>
+
+<form asp-action="AddThing" method="post">
+
+    <div class="form-group">
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" class="form-control" required />
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Submit</button>
+        <a asp-action="Things" class="btn btn-default">Cancel</a>
+    </div>
+</form>
+```
+
+* Add the HTTP POST action.
+
+`Controllers/HomeController.cs`
+
+```
+public IActionResult AddThing()
+{
+    return View();
+}
+
+[HttpPost]
+public IActionResult AddThing(Thing thing)
+{
+
+    if (ModelState.IsValid)
+    {
+        var thingExists = repo.Things.Any(t => t.Name == thing.Name);
+        if (!thingExists)
+        {
+            repo.SaveThing(thing);
+            return RedirectToAction("Things");
+        }
+
+        ViewData["Message"] = "A thing with this name already exists.";
+
+        return View("CustomError");
+    }
+    return View();
+}
+```
+
+`Views/Shared/CustomError.cshtml`
+
+```
+<h4 class="text-danger">@ViewData["Message"]</h4>
+```

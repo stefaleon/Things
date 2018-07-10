@@ -11,17 +11,52 @@ namespace MVCCoreApp.Controllers
     public class HomeController : Controller
     {
 
+        private Repository repo;
+
+        public HomeController(Repository rRepo)
+        {
+            repo = rRepo;
+        }
+
+
         public IActionResult Index()
         {
             return View();
         }
 
 
-        public IActionResult Things()
+        public ViewResult Things() => View(repo.Things.OrderBy(c => c.Name));
+
+
+        public IActionResult AddThing()
         {
             return View();
         }
-               
+
+        [HttpPost]
+        public IActionResult AddThing(Thing thing)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var thingExists = repo.Things.Any(t => t.Name == thing.Name);
+                if (!thingExists)
+                {
+                    repo.SaveThing(thing);
+                    return RedirectToAction("Things");
+                }
+
+                ViewData["Message"] = "A thing with this name already exists.";
+
+                return View("CustomError");
+            }
+            return View();
+        }
+
+        public IActionResult DeleteThing()
+        {
+            return View();
+        }
 
         public IActionResult Error()
         {

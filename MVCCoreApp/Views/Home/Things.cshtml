@@ -1,1 +1,27 @@
-﻿things
+﻿@model IEnumerable<Thing>
+
+
+<div class="text-center" style="padding: 10px">
+    <a asp-action="AddThing" class="btn btn-primary">Add a thing</a>
+</div>
+
+
+<table class="table table-striped table-bordered table-sm">
+    <tr>
+        <th>Name</th>
+    </tr>
+    @foreach (var thing in Model)
+    {
+    <tr>
+        <td>@thing.Name</td>
+        <td class="text-center">
+            <form asp-action="DeleteThing" method="post">
+                <input type="hidden" name="Id" value="@thing.Id" />
+                <button type="submit" class="btn btn-danger btn-sm">
+                    Delete
+                </button>
+            </form>
+        </td>
+    </tr>
+    }
+</table>
