@@ -13,7 +13,10 @@
     @foreach (var thing in Model)
     {
     <tr>
-        <td>@thing.Name</td>
+        <td>
+            <a asp-action="EditThing" asp-route-thingId="@thing.Id">@thing.Name</a>            
+        </td>
+
         <td class="text-center">
             <form asp-action="ConfirmDeletion" method="post">
                 <input type="hidden" name="thingId" value="@thing.Id" />

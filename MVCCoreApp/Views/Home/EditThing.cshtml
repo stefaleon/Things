@@ -1,0 +1,16 @@
+﻿@model Thing
+
+<h4>Edit Thing <b>@Model.Name</b></h4>
+
+<form asp-action="EditThing" method="post">
+    <input asp-for="Id" type="hidden" />
+    <div class="form-group">
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" class="form-control" required />
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Submit</button>
+        <a asp-action="Things" class="btn btn-default">Cancel</a>
+    </div>
+</form>

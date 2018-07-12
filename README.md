@@ -370,3 +370,79 @@ public IActionResult DeleteThing(int thingId)
     </form>
 </td>
 ```
+
+
+## 09 Edit Things
+
+* Link to the EditThing action in the Things view.
+
+`Views/Home/Things.cshtml`
+
+```
+<td>
+    <a asp-action="EditThing" asp-route-thingId="@thing.Id">@thing.Name</a>            
+</td>
+```
+
+* Add the EditThing GET and POST actions. 
+
+
+`Controllers/HomeController.cs`
+
+```
+	public IActionResult EditThing(int thingId)
+        {
+            if (ModelState.IsValid)
+            {
+                var selectedThing = repo.Things.SingleOrDefault(t => t.Id == thingId);
+                if (selectedThing != null)
+                {
+                    return View("EditThing", selectedThing);
+                }
+
+                ViewData["Message"] = "A thing with this id cannot be found.";
+
+                return View("CustomError");                
+            }
+            return View();
+        }
+
+
+
+        [HttpPost]
+        public IActionResult EditThing(Thing thing)
+        {
+
+            if (ModelState.IsValid)
+            {
+                repo.SaveThing(thing);
+
+                return RedirectToAction("Things");
+            }
+
+            return View();
+        }
+```
+
+* Add the EditThing view.
+
+`Views/Home/EditThing.cshtml`
+
+```
+@model Thing
+
+<h4>Edit Thing <b>@Model.Name</b></h4>
+
+<form asp-action="EditThing" method="post">
+    <input asp-for="Id" type="hidden" />
+    <div class="form-group">
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" class="form-control" required />
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Submit</button>
+        <a asp-action="Things" class="btn btn-default">Cancel</a>
+    </div>
+</form>
+```

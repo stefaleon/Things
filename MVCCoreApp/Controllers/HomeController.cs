@@ -53,8 +53,39 @@ namespace MVCCoreApp.Controllers
             return View();
         }
 
+        public IActionResult EditThing(int thingId)
+        {
+            if (ModelState.IsValid)
+            {
+                var selectedThing = repo.Things.SingleOrDefault(t => t.Id == thingId);
+                if (selectedThing != null)
+                {
+                    return View("EditThing", selectedThing);
+                }
 
-        
+                ViewData["Message"] = "A thing with this id cannot be found.";
+
+                return View("CustomError");                
+            }
+            return View();
+        }
+
+
+
+        [HttpPost]
+        public IActionResult EditThing(Thing thing)
+        {
+
+            if (ModelState.IsValid)
+            {
+                repo.SaveThing(thing);
+
+                return RedirectToAction("Things");
+            }
+
+            return View();
+        }
+
 
 
         public IActionResult ConfirmDeletion(int thingId)
